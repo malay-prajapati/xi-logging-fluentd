@@ -105,7 +105,7 @@ configMaps:
       bind 0.0.0.0
     </source>
   output.conf: |
-    <match xi.logs>
+    <match xi.logs.**>
       @type copy
       <store>
           @type logzio_buffered
@@ -123,7 +123,7 @@ configMaps:
       </store>
       <store>
           @type coralogix
-          privatekey "replace with the right key"
+          privatekey "<private_key>"
           appname "xi"
           subsystemname "fluentd"
           is_json true
