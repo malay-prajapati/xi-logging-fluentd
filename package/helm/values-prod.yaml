@@ -32,6 +32,9 @@ service:
     - name: "forward"
       protocol: TCP
       containerPort: 24224
+    - name: "syslog"
+      protocol: TCP
+      containerPort: 5140    
     - name: "http"
       protocol: TCP
       containerPort: 9880      
@@ -39,6 +42,7 @@ service:
     - 192.146.154.0/24
     - 128.177.22.104/30
     - 4.14.67.36/30
+    - 206.80.159.0/24
 
 metrics:
   enabled: true
@@ -104,8 +108,15 @@ configMaps:
       port 24224
       bind 0.0.0.0
     </source>
+
+    <source>
+      @type syslog
+      port 5140
+      bind 0.0.0.0
+      tag xi.system
+    </source>
   output.conf: |
-    <match xi.logs.**>
+    <match xi.**>
       @type copy
       <store>
           @type logzio_buffered
@@ -123,7 +134,7 @@ configMaps:
       </store>
       <store>
           @type coralogix
-          privatekey "<private_key>"
+          privatekey "<token>"
           appname "xi"
           subsystemname "fluentd"
           is_json true
